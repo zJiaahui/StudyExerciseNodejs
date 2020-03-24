@@ -1,0 +1,19 @@
+.all {
+  margin: auto;
+}
+table {
+  border-collapse: collapse;
+  margin: 50px auto;
+}
+caption {
+  font-weight: 700;
+  padding: 0 0 10px 0;
+}
+table tr td,
+table tr th {
+  min-width: 50px;
+  padding: 5px 20px;
+}
+tbody tr:nth-child(2n + 1) {
+  background-color: rgb(241, 238, 238);
+}

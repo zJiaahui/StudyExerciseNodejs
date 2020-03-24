@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../public/css/style.css" />
+  </head>
+  <body>
+    <div class="div_all">
+      <div class="info">学生信息</div>
+      <form action="/addstudent" method="POST">
+        <label for="nameid">姓名</label><br />
+        <input type="text" name="name" id="nameid" /><br />
+        <label for="ageid">年龄</label><br />
+        <input type="text" name="age" id="ageid" /><br />
+        <label for="sexid">性别</label><br />
+        <input type="radio" name="sex" id="sexid" value="男" />男
+        <input type="radio" name="sex" id="sexid" value="女" />女<br />
+        <label for="emailid">邮箱</label><br />
+        <input type="email" name="email" id="emailid" /><br />
+        <label for="">爱好</label><br />
+        <input type="checkbox" name="hobbies" id="" value="唱" />唱
+        <input type="checkbox" name="hobbies" id="" value="跳" />跳
+        <input type="checkbox" name="hobbies" id="" value="rap" />rap
+        <input type="checkbox" name="hobbies" id="" value="篮球" />篮球
+        <br />
+        <label for="enterDateid">入学日期</label><br />
+        <input type="date" name="enterDate" id="enterDateid" /><br /><br />
+        <input type="submit" value="提交" />
+      </form>
+    </div>
+  </body>
+</html>
