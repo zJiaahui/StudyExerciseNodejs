@@ -1,4 +1,4 @@
-# 项目流程
+# StudyExerciseNodejs-blog项目流程
 
 - ### 1、创建项目根目录
 
@@ -11,7 +11,9 @@
 
   - 在项目目录下使用 powershell 等命令工具输入如下命令进行初始化
 
-  ```
+    
+
+  ```node.js
    npm init -y
   ```
 
@@ -20,11 +22,16 @@
   - #### 3.1、第三方项目库模块
 
     - `express`
+    
     - `mongoose`
+    
     - `art-template`
+    
     - `express-art-template`
+    
+      
 
-  ```
+  ```node.js
    npm install express mongoose art-template express-art-template
   ```
 
@@ -55,7 +62,7 @@
 
     - 该文件中创建二级路由`home`代码如下
 
-    ```
+    ```node.js
     //home页面资源二级路由文件
 
     //导入express框架
@@ -75,7 +82,7 @@
 
     - 该文件中创建二级路由`admin`代码如下
 
-    ```
+    ```node.js
     //admin页面资源二级路由文件
 
     //导入express框架
@@ -100,7 +107,7 @@
 
     - `app.js`文件中 router 代码如下
 
-    ```
+    ```node.js
     //当如express框架
     const express=require('express');
     //创建服务程序
@@ -127,7 +134,7 @@
 
     - `app.js`文件
 
-    ```
+    ```node.js
     //当如express框架
     const express=require('express');
     //创建服务程序
@@ -166,7 +173,7 @@
     - 在 express 框架中设置使用的模板文件（express 框架可以同时使用多个模板引擎）
       `app.engine("art", require("express-art-template"));`
 
-    ```
+    ```node.js
     const express = require("express");
     const path = require("path");
     //创建web服务程序
@@ -200,7 +207,7 @@
 
     - admin.js 文件中通过 admin 路由对象的 render('app.js 文件中指定的 views 路径下的剩余路径')读取模板并响应给客户端
 
-    ```
+    ```node.js
     //blog博客管理页面二级路由router
 
     const express = require("express");
@@ -234,7 +241,7 @@
 
     - 本项目 views 文件夹下 admin 文件夹里的管理端页面资源模板文件中，头部和左侧边栏代码是相同的因此可以抽离出来建立对应的 header.art 模板文件和 aside.art 模板文件，再在被抽离了公共部分代码的文件对其进行引入
 
-    ```
+    ```node.js
     {{include './common/header.art'}}
 
     {{include './common/aside.art'}}
@@ -245,7 +252,7 @@
     - 将模板的基本骨架提取出来并在 common 文件夹中建立对应的 layout.art 文件
     - 在 layout.art 文件同通过如下代码在放置的位置进行挖坑
 
-    ```
+    ```node.js
      {{block 'link'}}{{/block}}
      {{block 'main1'}}{{/block}}
      {{block 'script'}}{{/block}}
@@ -253,13 +260,13 @@
 
     - 然后把其他模板的骨架全部剔除，通过如下代码进行继承
 
-    ```
+    ```node.js
     {{extend './common/layout.art'}}
     ```
 
     - 然后再在继承了 layout.art 模板的子模板中对哇的坑进行自定义代码
 
-    ```
+    ```art
     {{block 'link'}}写入该页面需求 HTML 代码{{/block}}
     {{block 'main1'}}写入该页面需求 HTML 代码{{/block}}
     {{block 'script'}}写入该页面需求 HTML 代码{{/block}}
