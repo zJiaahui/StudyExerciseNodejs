@@ -11,6 +11,8 @@
 
   - 在项目目录下使用 powershell 等命令工具输入如下命令进行初始化
 
+    
+
   ```node.js
    npm init -y
   ```
@@ -20,9 +22,14 @@
   - #### 3.1、第三方项目库模块
 
     - `express`
+    
     - `mongoose`
+    
     - `art-template`
+    
     - `express-art-template`
+    
+      
 
   ```node.js
    npm install express mongoose art-template express-art-template
