@@ -406,5 +406,92 @@
     ```node.js
     const bcrypt = require("bcrypt");
     //参数1是输入的明文密码，参数2是数据库的加密密码，bcrypt.compare对两者进行批匹配
-     let isValid = await bcrypt.compare(password, user.password);
+    let isValid = await bcrypt.compare(password, user.password);
     ```
+
+- ## 12、cookie 与 session 记录登录状态
+
+  - ### 12.1、node.js 文件中需要借助 express-session 实现 session 功能
+
+    - 安装 express-session 模块(express-session 也是基于 express 框架实现的)
+
+    ```node.js
+      npm install express-session
+    ```
+
+    - app.js 文件中
+
+    ```node.js
+    //导入session模块
+    const session = require("express-session");
+    //配置session
+    app.use(
+      session({ resave: true, saveUninitialized: true, secret: "secret key" })
+    );
+    ```
+
+    - admin.js 文件的/login 路由中就可以使用 session 了（注意当服务器重启后 session 就会失效）
+
+    ```node.js
+    //当密码验证成功登录后将用户名存在req.session.username中
+    const bcrypt = require("bcrypt");
+    //参数1是输入的明文密码，参数2是数据库的加密密码，bcrypt.compare对两者进行批匹配
+    let isValid = await bcrypt.compare(password, user.password);
+    if (isValid) {
+      req.session.uaername = user.name;
+      //req能获取express框架的app对象然后通过app.locals.将数据报了出去让所有模板都可以访问userInfo了
+      req.app.locals.userInfo = user;
+    }
+    ```
+
+- ## 12、登录拦截
+
+  - ### 12.1、在项目根目录下新建 middleware 文件放置中间件函数模块
+
+    - 新建 loginGuard.js 文件为登录拦截中间件
+
+    ```node.js
+    //中间件函数
+    //登录拦截中间件
+    const guard = (req, res, next) => {
+      //所有一级路由为/admin的请求会进入该中间件
+      if (req.url != "/login" && !req.session.username) {
+        //通过二级路由判断不是访问登录页面，再判断session没有记录登录状态
+        //重定向至登录页面
+        res.redirect("/admin/login");
+      } else {
+        //放行请求
+        next();
+      }
+    };
+
+    module.exports = guard;
+    ```
+
+    app.js 文件中导入
+
+    ```node.js
+    //拦截请求，app.use()是按顺序执行的，在所有路由前使用该中间件拦截所以请求
+    app.use("/admin", require("./middleware/loginGuard"));
+    ```
+
+- ## 13、退出登录
+  - ### admin.js 文件
+  ```node.js
+  //退出登录路由
+  admin.get("/logout", require("./admin/logout"));
+  ```
+  - ### admin 文件夹下 logout.js 文件
+  ```node.js
+  //删除Cookie值，重定向到登录页面
+  module.exports = (req, res) => {
+    req.session.destroy(function() {
+      res.clearCookie("connect.sid");
+      res.redirect("/admin/login");
+    });
+  };
+  ```
+
+* ## 14、路由代码优化
+  - ### 14.1、在 router 文件夹下建立 admin 文件夹用于放置 admin.js 文件中各个路由的实际逻辑操作函数，每个路由的逻辑函数都单独建一个 js 文件通过 module.exports 导出
+  - ### 14.2、在 admin.js 文件的各个路由第二个参数中进行对应的导入
