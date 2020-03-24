@@ -11,7 +11,7 @@
 
   - 在项目目录下使用 powershell 等命令工具输入如下命令进行初始化
 
-  ```
+  ```node.js
    npm init -y
   ```
 
@@ -24,7 +24,7 @@
     - `art-template`
     - `express-art-template`
 
-  ```
+  ```node.js
    npm install express mongoose art-template express-art-template
   ```
 
@@ -259,7 +259,7 @@
 
     - 然后再在继承了 layout.art 模板的子模板中对哇的坑进行自定义代码
 
-    ```node.js
+    ```art
     {{block 'link'}}写入该页面需求 HTML 代码{{/block}}
     {{block 'main1'}}写入该页面需求 HTML 代码{{/block}}
     {{block 'script'}}写入该页面需求 HTML 代码{{/block}}
