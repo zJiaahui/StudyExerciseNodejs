@@ -3,6 +3,7 @@
 //导入mongoose数据库管理模块
 const mongoose = require("mongoose");
 //向数据库建立链接
+mongoose.set("useCreateIndex", true);
 mongoose
   .connect("mongodb://127.0.0.1/blog", {
     useNewUrlParser: true,

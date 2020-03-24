@@ -2,7 +2,7 @@
 
 const express = require("express");
 const { User } = require("../model/user");
-
+const bcrypt = require("bcrypt");
 //创建admin路由对象
 const admin = express.Router();
 
@@ -24,12 +24,19 @@ admin.post("/login", async (req, res) => {
     res.status(400).render("admin/error", { msg: "用户名或密码错误" });
     return false;
   }
-  let user = await User.findOne({ email, password });
+  let user = await User.findOne({ email });
   if (!user) {
     res.status(400).render("admin/error", { msg: "用户名或密码错误" });
     return false;
   } else {
-    res.render("admin/user");
+    let isValid = await bcrypt.compare(password, user.password);
+    if (isValid) {
+      console.log("加密密码比对成功" + user.password);
+
+      res.render("admin/user");
+    } else {
+      res.status(400).render("admin/error", { msg: "用户名或密码错误" });
+    }
   }
   res.send();
 });

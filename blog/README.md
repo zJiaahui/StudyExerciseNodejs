@@ -373,6 +373,38 @@
   app.use(bodyParser.urlencoded({ extended: false }));
   ```
 
-- #### 10.5、前端对表单内容进行验证 后端同样要先对表单进行验证 再比对数据库
+  - #### 10.5、前端对表单内容进行验证 后端同样要先对表单进行验证 再比对数据库
 
-* ### 11、密码加密
+- ### 11、密码加密（bcrypt）
+
+  - #### 11.1 安装 bcrypt 加密模块前需要先安装如下依赖
+    - python（要配置好环境变量）
+    - npm install node-gyp -g
+    - npm install --global --production windows-build-tools
+    - npm install bcrypt
+  - #### 11.2、加密密码
+
+    ```
+      //导入加密模块对象
+      const bcrypt = require("bcrypt");
+      // //创建文档
+       async function createUser() {
+        const salt = await bcrypt.genSalt(10);
+        const pass = await bcrypt.hash("123456", salt);
+        const user = User.create({
+          username: "guanliyuan",
+          email: "123@qq.com",
+          password: pass,
+          role: "admin",
+          state: 0
+        });
+      }
+      //createUser();
+    ```
+
+  - #### 11.2、匹配密码
+    ```node.js
+    const bcrypt = require("bcrypt");
+    //参数1是输入的明文密码，参数2是数据库的加密密码，bcrypt.compare对两者进行批匹配
+     let isValid = await bcrypt.compare(password, user.password);
+    ```
