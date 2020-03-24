@@ -28,7 +28,9 @@ router.get("/add", (req, res) => {
 router.post("/addstudent", (req, res) => {
   console.log("接收到post请求" + url.parse(req.url, true).pathname);
   let s = "";
-  req.on("data", ss => (s += ss));
+  req.on("data", ss => {
+    s += ss;
+  });
   req.on("end", async () => {
     console.log(s);
     console.log(querystring.parse(s));

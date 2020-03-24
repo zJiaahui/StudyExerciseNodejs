@@ -29,9 +29,11 @@
             <td>{{$value.age}}</td>
             <td>{{$value.sex}}</td>
             <td>{{$value.email}}</td>
-            <td>{{each $value.hobbies}}
+            <td>
+            {{each $value.hobbies}}
             {{$value}}
-            {{/each}}</td>
+            {{/each}}
+            </td>
             <td>{{dateformat($value.enterDate,'yyyy-mm-dd')}}</td>
           </tr>
          {{/each}}
