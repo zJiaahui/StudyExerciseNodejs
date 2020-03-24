@@ -1,4 +1,4 @@
-# StudyExerciseNodejs-blog项目流程
+# StudyExerciseNodejs-blog 项目流程
 
 - ### 1、创建项目根目录
 
@@ -11,32 +11,31 @@
 
   - 在项目目录下使用 powershell 等命令工具输入如下命令进行初始化
 
-    
-
-  ```node.js
-   npm init -y
-  ```
+```node.js
+ npm init -y
+```
 
 - ### 3、下载该项目初定的第三方模块
 
   - #### 3.1、第三方项目库模块
 
     - `express`
-    
+
     - `mongoose`
-    
+
     - `art-template`
-    
+
     - `express-art-template`
-    
-      
 
-  ```node.js
-   npm install express mongoose art-template express-art-template
-  ```
+    - `body-parser`
 
-  - #### 3.2、第三方命令行工具模块
-    - `nodemon`
+```node.js
+ npm install express mongoose art-template express-art-template body-parser
+```
+
+- #### 3.2、第三方命令行工具模块
+
+  - `nodemon`
 
 - ### 4、项目根目录下建立项目入口文件
 
@@ -66,16 +65,16 @@
     //home页面资源二级路由文件
 
     //导入express框架
-    const express=require('express');
+    const express = require("express");
     //创建home二级路由对象
-    const home=express.Router();
+    const home = express.Router();
     //创建home二级路由
-    home.get('/',(req,res)=>{
-    	res.send('欢迎进入blog首页');
+    home.get("/", (req, res) => {
+      res.send("欢迎进入blog首页");
     });
 
     //将二级路由对象home作为模块成员导出(将在项目主程序app.js文件中与一级路由拼接)
-    module.exports=home;
+    module.exports = home;
     ```
 
   - ### 5.2、项目 router 文件夹创建首页路由文件 ==admin.js==
@@ -86,19 +85,18 @@
     //admin页面资源二级路由文件
 
     //导入express框架
-    const express=require();
+    const express = require();
 
     //创建admin二级路由对象
-    const admin=express.Router();
+    const admin = express.Router();
 
     //创建admin二级路由
-    admin.get('/',(req,res)=>{
-    res.send('欢迎进入admin页面');
+    admin.get("/", (req, res) => {
+      res.send("欢迎进入admin页面");
     });
 
     //将admin二级路由作为模块成员导出(将在项目主程序app.js文件中与一级路由拼接)
-    module.exports=admin;
-
+    module.exports = admin;
     ```
 
 - ### 6、项目主文件 ==app.js== 中创建一级路由并指向二级路由
@@ -109,23 +107,23 @@
 
     ```node.js
     //当如express框架
-    const express=require('express');
+    const express = require("express");
     //创建服务程序
-    const app=express();
+    const app = express();
 
     //=====================================
     //创建资源路由
     //先导入二级资源路由对象home和admin
-    const home=require('./router/home');
-    const admin=require('./router/admin');
-    app.use('/home',home);
-    app.use('/admin',admin);
+    const home = require("./router/home");
+    const admin = require("./router/admin");
+    app.use("/home", home);
+    app.use("/admin", admin);
     //=====================================
 
     //设置服务程序端口
-    app.listen(80,()=>{
-    	conslon.log("服务程序已启动请访问")
-    })
+    app.listen(80, () => {
+      conslon.log("服务程序已启动请访问");
+    });
     ```
 
 - ### 7、静态资源 router
@@ -200,7 +198,6 @@
     app.listen(80, () => {
       console.log("服务程序启动成功请访问");
     });
-
     ```
 
   - #### 8.3、admin 路由文件中读取模板和响应模板
@@ -215,11 +212,9 @@
     const admin = express.Router();
     //创建admin路由
     admin.get("/login", (req, res) => {
-
       //===============================
       res.render("admin/login");
       //===============================
-
     });
     //将admin路由router作为模块成员进行导出
     module.exports = admin;
@@ -271,3 +266,113 @@
     {{block 'main1'}}写入该页面需求 HTML 代码{{/block}}
     {{block 'script'}}写入该页面需求 HTML 代码{{/block}}
     ```
+
+- ### 10、登录功能
+
+  - #### 10.1、建立数据库链接初始化管理员用户
+
+    - 在 model 文件夹下创建`connect.js`文件在其中写数据库链接
+
+    ```node.js
+    //向数据库建立链接
+    mongoose
+      .connect("mongodb://127.0.0.1/blog", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      })
+      .then(() => {
+        console.log("数据库链接成功");
+      })
+      .catch(err => {
+        console.log("数据库链接失败");
+      });
+    ```
+
+    - 在 model 文件夹下创建`user.js`文件在其中创建用户集合规则创建初始化管理员用户
+
+    ```node.js
+    //创建用户集合
+    //导入mongoose数据库管理模块
+    const mongoose = require("mongoose");
+
+    //创建集合规则
+    const schema = new mongoose.Schema({
+      username: {
+        type: String,
+        required: [true, "用户名必填"],
+        minlength: [2, "用户名长度不够"],
+        maxlength: [20, "用户名长度太长"]
+      },
+      email: {
+        type: String,
+        //保证插入数据不重复
+        unique: [true, "数据库里已经插入了该邮箱"],
+        required: [true, "邮箱必须填写"]
+      },
+      password: {
+        type: String,
+        required: [true, "密码必须填写"]
+      },
+      role: {
+        type: String,
+        required: [true, "角色必选"],
+        enum: {
+          values: ["admin", "normal"], //超级管理用户admin  普通用户normal
+          message: "角色设置错误"
+        }
+      },
+      state: {
+        //状态0启用 1禁用
+        type: Number,
+        default: 0 //默认为0
+      }
+    });
+    // 创建集合
+    const User = mongoose.model("User", schema);
+
+    // 初始化管理员用户
+    User.create({
+      username: "guanliyuan",
+      email: "123@qq.com",
+      password: "123456",
+      role: "admin",
+      state: 0
+    })
+      .then(doc => {
+        console.log("用户创建成功");
+      })
+      .catch(err => {
+        console.log("用户创建失败");
+        for (var attr in err.errors) {
+          console.log(err.errors[attr][message]);
+        }
+      });
+
+    //将User作为模块成员导出
+    module.exports = { User };
+    ```
+
+    - 在`app.js`文件中先导入`connect.js`再导入`user.js` (模块再使用 require 导入的时候就会自动执行)
+
+    ```
+    //链接数据库
+    require("./model/connect");
+    require("./model/user");
+
+    //注意当运行完查看数据库有数据后请把创建初始管理员代码注释掉以免每次执行都会去创建
+    ```
+
+  - #### 10.2、设置登录表单请求地址，请求方式（post）
+  - #### 10.3、设置登录请求路由
+  - #### 10.4、post 请求参数处理
+
+  ```node.js
+  //导入body-parser第三方模块处理post请求参数
+  const bodyParser = require("body-parser");
+  //设置处理post请求参数方式（extended:false表示用系统模块querystring处理extended:true表示采用第三方模块处理）
+  app.use(bodyParser.urlencoded({ extended: false }));
+  ```
+
+- #### 10.5、前端对表单内容进行验证 后端同样要先对表单进行验证 再比对数据库
+
+* ### 11、密码加密

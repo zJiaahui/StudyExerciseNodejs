@@ -1,0 +1,31 @@
+{{extend './common/layout.art'}}
+{{block 'link'
+
+}}<link rel="stylesheet" href="/admin/css/error.css" />{{/block}}
+{{block 'main1'}}
+
+<div class="all">
+  <div class="msg">{{ msg }}</div>
+  <hr />
+  <div class="time">10 秒后重新跳转登录界面</div>
+  <div><a href="/admin/login">立即跳转</a></div>
+</div>
+
+{{/block}} {{block 'script'}}
+<script>
+  var cont = 10;
+  var setIntervalId = setInterval(() => {
+    cont--;
+
+    $(".time").text(cont + " 秒后重新跳转登录界面");
+    if (cont == 0) {
+      clearInterval(setIntervalId);
+      location.href = "/admin/login";
+    }
+  }, 1000);
+  $(".time").click(() => {
+    clearInterval(setIntervalId);
+  });
+  console.log($(".time"));
+</script>
+{{/block}}
