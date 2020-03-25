@@ -3,6 +3,7 @@ const { User, verifyUserInfo } = require("../../model/user");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
 module.exports = async (req, res, next) => {
+  req.app.locals.currentLink = "user";
   try {
     await verifyUserInfo(req.body);
   } catch (error) {

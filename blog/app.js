@@ -7,7 +7,12 @@ const session = require("express-session");
 
 //创建web服务程序
 const app = express();
-
+//导入日期格式处理模块
+const dateformat = require("dateformat");
+//全局配置dateformat
+//导入模板在向模板中导入dateformat
+const template = require("art-template");
+template.defaults.imports.dateformat = dateformat;
 //链接数据库
 require("./model/connect");
 

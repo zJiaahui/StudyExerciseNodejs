@@ -1,5 +1,6 @@
 const { User } = require("../../model/user");
 module.exports = async (req, res) => {
+  req.app.locals.currentLink = "user";
   const { msg, id } = req.query;
   if (id) {
     const user = await User.findOne({ _id: id });

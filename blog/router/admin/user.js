@@ -1,5 +1,6 @@
 const { User } = require("../../model/user");
 module.exports = async (req, res) => {
+  req.app.locals.currentLink = "user";
   //数据分页功能
   const page = req.query.page || 1;
   //定义一页显示10条数据

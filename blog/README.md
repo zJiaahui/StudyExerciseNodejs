@@ -566,7 +566,7 @@
   };
   ```
 
-  ```
+  ```node.js
    <!-- 分页 -->
     <ul class="pagination">
           <li style="display:<%==page==1?"none":"inline"%>">
@@ -581,4 +581,106 @@
           </li>
       </ul>
    <!-- /分页 -->
+  ```
+
+- ## 16、删除用户
+
+  - ### 16.1、在模板文件中通过自定义属性 data-id 保存到点击的按钮上
+
+  ```node.js
+   {{each alluser}}
+           <tr>
+               <td>{{@$value._id}}</td>
+               <td>{{$value.username}}</td>
+               <td>{{$value.email}}</td>
+               <td>{{$value.role=='normal'?'普通用户':'超级管理员'}}</td>
+               <td>{{$value.state=='0'?'正常':'禁用'}}</td>
+               <td>
+                   <a href="/admin/user-edit?id={{@$value._id}}" class="glyphicon glyphicon-edit"></a>
+                   <i class="glyphicon glyphicon-remove del" data-toggle="modal" data-id="{{@$value._id}}" data-target=".confirm-modal"></i>
+               </td>
+           </tr>
+    {{/each}}
+  ```
+
+  - ### 16.2、点击按钮时获取其自定义属性确认对话框中采用隐藏表单
+    ```node.js
+    {{block 'script'}}
+      <script type="text/javascript">
+          $('.del').on('click',function(){
+              var idss= $(this).attr("data-id");
+              console.log(idss);
+            $("#delUserId").val(idss);
+          });
+      </script>
+    {{/block}}
+    ```
+
+- ## 17、事件中的回调函数不要使用箭头函数（this 指向问题）
+- ## 18、涉及文件上传的表单必须指定编码方式
+
+  - ### 18.1、设置方式
+
+    - enctype="multipart/form-data" （二进制含有文件上传的情况下使用）
+    - enctype="application/x-www-form-urlencoded" (默认)
+    - enctype="text/plain"
+
+  - ### 18.2、设置为二进制编码的表单数据处理
+    - 原来 app.js 文件中的第三方库是解析不了的
+      ```node.js
+      //导入处理post请求参数模块
+      const bodyParser = require("body-parser");
+      app.use(bodyParser.urlencoded({ extended: false }));
+      //设置处理post请求参数方式（extended:fals表示用系统模块querystring处理extended:tru表示采用第三方模块处理）
+      app.use(bodyParser.urlencoded({ extended: false }));
+      ```
+  - ### 18.3、采用 formidable 第三方来解析二进制编码的表单提交参数
+
+    - 作用：解析表单，支持 get 请求参数，post 请求参数，文件上传解析
+
+    ```node.js
+    //安装该库
+    npm install formidable
+
+    //
+    ```
+
+- ## 19、读取图片并预览
+  ```
+    //实现图片上传预览功能
+    //获取上传控件
+    var file = document.querySelector("#file");
+    //获取上传图片预览控件
+    var preview = document.querySelector("#preview");
+    //监听是否选择文件
+    file.onchange = function() {
+      //选择文件后创建文件读取对象
+      var reader = new FileReader();
+      //用户已选择文件列表（默认就是数组类型因为可以实现选择多个文件）
+      this.files[0];
+      //读取文件（该方法为异步方法）
+      reader.readAsDataURL(this.files[0]);
+      //监听读取完成
+      reader.onload = function() {
+        //打印读取得编码看看该值可以直接让img标签的src属性使用
+        console.log(reader.result);
+        //将上传的文件在img标签中显示
+        preview.src = reader.result;
+        preview.style.width = "200px";
+      };
+    };
+  ```
+- ## 20、日期格式处理
+
+  ```node.js
+  //导入日期格式处理模块
+  const dateformat = require("dateformat");
+  //全局配置dateformat
+  //导入模板在向模板中导入dateformat
+  const template = require("art-template");
+  template.defaults.imports.dateformat = dateformat;
+
+  //模板中使用日期处理
+   <td>{{dateformat($value.publishDate,"yyyy-mm-dd")}}</td>
+
   ```
