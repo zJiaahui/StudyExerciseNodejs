@@ -52,5 +52,34 @@ async function createUser() {
   });
 }
 //createUser();
-//将User作为模块成员导出
-module.exports = { User };
+//验证用户表单
+const Joi = require("joi");
+function verifyUserInfo(user) {
+  const schema = {
+    username: Joi.string()
+      .min(2)
+      .max(12)
+      .required()
+      .error(new Error("用户名不合法")),
+    email: Joi.string()
+      .email()
+      .required()
+      .error(new Error("邮箱格式错误")),
+    password: Joi.string()
+      .regex(/^[a-zA-Z0-9]{3,30}$/)
+      .required()
+      .error(new Error("密码不合法")),
+    role: Joi.string()
+      .valid("admin", "normal")
+      .required()
+      .error(new Error("角色不合法")),
+    state: Joi.string()
+      .valid("0", "1")
+      .required()
+      .error(new Error("状态不合法"))
+  };
+  return Joi.validate(user, schema);
+}
+
+//将User和verifyUserInfo作为模块成员导出
+module.exports = { User, verifyUserInfo };

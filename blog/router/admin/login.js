@@ -14,7 +14,6 @@ module.exports = async (req, res) => {
   } else {
     let isValid = await bcrypt.compare(password, user.password);
     if (isValid) {
-      console.log("加密密码比对成功" + user.password);
       //通过req.session记录用户登录状态
       req.session.username = user.username;
       //req能获取express框架的app对象然后通过app.locals.将数据报了出去让所有模板都可以访问

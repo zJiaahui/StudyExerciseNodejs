@@ -476,12 +476,16 @@
     ```
 
 - ## 13、退出登录
+
   - ### admin.js 文件
+
   ```node.js
   //退出登录路由
   admin.get("/logout", require("./admin/logout"));
   ```
+
   - ### admin 文件夹下 logout.js 文件
+
   ```node.js
   //删除Cookie值，重定向到登录页面
   module.exports = (req, res) => {
@@ -492,6 +496,89 @@
   };
   ```
 
-* ## 14、路由代码优化
+- ## 14、路由代码优化
   - ### 14.1、在 router 文件夹下建立 admin 文件夹用于放置 admin.js 文件中各个路由的实际逻辑操作函数，每个路由的逻辑函数都单独建一个 js 文件通过 module.exports 导出
   - ### 14.2、在 admin.js 文件的各个路由第二个参数中进行对应的导入
+- ## 15、表单验证模块 joi
+
+  - 安装和使用
+
+    ```node.js
+    npm install joi
+    //导入验证用户表单第三方模块
+    const Joi = require("joi");
+    //定义验证规则
+    const schema = {
+        username: Joi.string()
+          .min(2)
+          .max(12)
+          .required()
+          .error(new Error("用户名不合法")),
+        email: Joi.string()
+          .email()
+          .required()
+          .error(new Error("邮箱格式错误")),
+        password: Joi.string()
+          .regex(/^[a-zA-Z0-9]{3,30}$/)
+          .required()
+          .error(new Error("密码不合法")),
+        role: Joi.string()
+          .valid("admin", "normal")
+          .required()
+          .error(new Error("角色不合法")),
+        state: Joi.string()
+          .valid("0", "1")
+          .required()
+          .error(new Error("状态不合法"))
+      };
+
+    try {
+        //验证输入的表单信息与表单填写规则是否匹配，不匹配则抛出错误让try进行捕获
+        await Joi.validate(req.body, schema);
+      } catch (error) {
+        //打印验证失败信息
+        log(error.message);
+      }
+    ```
+
+- ## 16、分页功能
+
+  ```node.js
+  async (req, res) => {
+    //数据分页功能
+    const page = req.query.page || 1;
+    //定义一页显示10条数据
+    const pagesize = 10;
+    //查询数据库中的所有数据条数
+    const allsize = await User.countDocuments({});
+    //计算所有数据要分多少页显示
+    const allpage = Math.ceil(allsize / pagesize);
+    //数据查询
+    const users = await User.find()
+      .limit(pagesize)
+      .skip((page - 1) * pagesize);
+    res.render("admin/user", {
+      msg: req.session.username,
+      alluser: users,
+      page: page,
+      allpage: allpage
+    });
+  };
+  ```
+
+  ```
+   <!-- 分页 -->
+    <ul class="pagination">
+          <li style="display:<%==page==1?"none":"inline"%>">
+    <a href="/admin/user?page=<%=page==1?page:page-1%>">
+          </li>
+          <% for(var i=1;i<=allpage;i++){%>
+          <li>
+          <a style="background-color:<%=page==i?'rgb(252, 200, 226);':'#FFF;'%>" href="/admin/user?page=<%=i%>">{{i}}</a></li>
+        <%}%>
+          <li style="display:<%==page==allpage?"none":"inline"%>" >
+              <a  href="/admin/user?page=<%=page==allpage?page:page-0+1%>">
+          </li>
+      </ul>
+   <!-- /分页 -->
+  ```

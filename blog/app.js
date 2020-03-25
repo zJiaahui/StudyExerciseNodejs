@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-//导入加密工具模块（用户密码加密与验证）
+//导入处理post请求参数模块
 const bodyParser = require("body-parser");
 //导入session模块（用于记住用户登入状态）
 const session = require("express-session");
@@ -39,6 +39,20 @@ app.use("/admin", require("./middleware/loginGuard"));
 app.use("/home", require("./router/home"));
 app.use("/admin", require("./router/admin"));
 
+//创建错误处理中间件（必须放在所有路由的最后面）
+app.use((err, req, res, next) => {
+  if (JSON.parse(err).id) {
+    res.redirect(
+      JSON.parse(err).path +
+        JSON.parse(err).msg +
+        "&" +
+        "id=" +
+        JSON.parse(err).id
+    );
+  } else {
+    res.redirect(JSON.parse(err).path + JSON.parse(err).msg);
+  }
+});
 //设置服务程序端口
 app.listen(80, () => {
   console.log("服务程序启动成功请访问");
