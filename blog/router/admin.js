@@ -25,5 +25,7 @@ admin.post("/adduser", require("./admin/adduser"));
 //修改用户功能路由
 admin.post("/updateuser", require("./admin/updateuser"));
 
+//删除用户功能路由
+admin.post("/deluser", require("./admin/deluser"));
 //将admin路由router作为模块成员进行导出
 module.exports = admin;
