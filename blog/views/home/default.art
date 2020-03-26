@@ -1,51 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>首页</title>
-	<link rel="stylesheet" href="css/base.css">
-	<link rel="stylesheet" href="css/index.css">
-</head>
-<body>
-	<!-- 头部框架开始 -->
-	<div class="header">
-		<div class="w1100">
-			<!-- 网站logo开始 -->
-			<h1 class="logo fl">
-				<a href="default.html"><img src="images/logo.png" alt="黑马程序员"></a>
-			</h1>
-			<!-- 网站logo结束 -->
-			<!-- 网站导航开始 -->
-			<ul class="navigation fr">
-				<li>
-					<a class="active" href="index.html">首页</a>
-				</li>
-				<li>
-					<a href="#">登录</a>
-				</li>
-			</ul>
-			<!-- 网站导航结束 -->
-		</div>
-	</div>
-	<!-- 头部框架结束 -->
-	<!-- 文章列表开始 -->
-	<ul class="list w1100">
-		<li class="fl">
-			<a href="article.html" class="thumbnail">
-				<img src="images/1.jpg">
-			</a>
-			<div class="content">
-				<a class="article-title" href="article.html">阿里巴巴旗下的1688－VR市场 打造批发新体验</a>
-				<div class="article-info">
-					<span class="author">子霆</span>
-					<span>2020-09-10</span>
-				</div>
-				<div class="brief">
-					前言 “我们相信互联网的世界和实体的商业世界是一个世界。数字、数据化、技术，使得这两个世界走在一起，让这两个世界能够发生很美好的变化，创造更多的客户价值和商业价值。”—...
-				</div>
-			</div>
-		</li>
-		<li class="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>首页</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+  <body>
+    <!-- 头部框架开始 -->
+    <div class="header">
+      <div class="w1100">
+        <!-- 网站logo开始 -->
+        <h1 class="logo fl">
+          <a href="default.html" style="color: #FFF; margin-top: 10px;"
+            >新星博客</a
+          >
+        </h1>
+        <!-- 网站logo结束 -->
+        <!-- 网站导航开始 -->
+        <ul class="navigation fr">
+          <li>
+            <a class="active" href="index.html">首页</a>
+          </li>
+          <li>
+            <a href="#">登录</a>
+          </li>
+        </ul>
+        <!-- 网站导航结束 -->
+      </div>
+    </div>
+    <!-- 头部框架结束 -->
+    <!-- 文章列表开始 -->
+    <ul class="list w1100">
+      {{each articles&&articles.records}}
+      <li class="fl">
+        <a href="article.html" class="thumbnail">
+          <img src="{{ articles.records && $value.cover }}" />
+        </a>
+        <div class="content">
+          <a class="article-title" href="article.html">{{
+            articles.records && $value.title
+          }}</a>
+          <div class="article-info">
+            <span class="author">{{
+              articles.records && $value.author.username
+            }}</span>
+            <span>{{
+              articles.records && dateformat($value.publishDate, "yyyy-mm-dd")
+            }}</span>
+          </div>
+          <div class="brief">
+            {{@ articles.records && $value.content }}
+          </div>
+        </div>
+      </li>
+      {{/each}}
+      <!-- <li class="fr">
 			<a href="article.html" class="thumbnail">
 				<img src="images/2.png">
 			</a>
@@ -122,20 +132,22 @@
 					关于品牌设计Brand Design 首选我们需要了解什么是品牌？ 现代营销学之父菲利普.科特勒在《市场营销学》中的定义，品牌是销售者向购买者长期提供的一组特定的特点、利益和服务，是一个...
 				</div>
 			</div>
-		</li>
-	</ul>
-	<!-- 文章列表结束 -->
+		</li> -->
+    </ul>
+    <!-- 文章列表结束 -->
 
-	<!-- 分页开始 -->
-	<div class="page w1100">
-		<a href="#">上一页</a>
-		<a href="#" class="active">1</a>
-		<a href="#">2</a>
-		<a href="#">3</a>
-		<a href="#">4</a>
-		<a href="#">5</a>
-		<a href="#">下一页</a>
-	</div>
-	<!-- 分页结束 -->
-</body>
+    <!-- 分页开始 -->
+    <div class="page w1100">
+      <a href="/home/default?page={{ articles.page=="1"?"1":articles.page-1 }}">上一页</a>
+      {{each articles&&articles.display}}
+      <a href="/home/default?page={{ $value }}" class="<%= articles.page==$value?"active":""%>">{{ $value }}</a>
+      {{/each}}
+      <!-- <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">4</a>
+      <a href="#">5</a> -->
+      <a href="/home/default?page={{ articles.page==articles.pages?articles.page: articles.page-0+1 }}">下一页</a>
+    </div>
+    <!-- 分页结束 -->
+  </body>
 </html>

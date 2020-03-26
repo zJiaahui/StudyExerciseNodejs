@@ -13,8 +13,8 @@ module.exports = async (req, res) => {
   const articles = await mongooseSexPage(Article)
     .find()
     .page(page)
-    .size(1)
-    .display(3)
+    .size(5)
+    .display(5)
     .populate("author")
     .exec();
 

@@ -58,6 +58,14 @@ app.use((err, req, res, next) => {
     res.redirect(JSON.parse(err).path + JSON.parse(err).msg);
   }
 });
+
+const morgan = require("morgan");
+//区分开发环境和生产环境（在不同的环境中项目配置是不一样的，为了避免项目放到生产环境是还有手动手改配置而产生麻烦）
+if (process.env.NODE_ENV == "development") {
+  app.use(morgan("dev")); //在开发环境中将客户端发送到服务器的请求信息打印到控制台中
+} else if (process.env.NODE_ENV == "production") {
+}
+
 //设置服务程序端口
 app.listen(80, () => {
   console.log("服务程序启动成功请访问");

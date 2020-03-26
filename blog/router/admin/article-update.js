@@ -24,12 +24,18 @@ module.exports = async (req, res, next) => {
           })
         );
       }
+
+      let coverpath = files.cover.path.split("public")[1];
+
+      if (coverpath.indexOf(".") == "-1") {
+        coverpath = article.cover;
+      }
       await Article.updateOne(
         { _id: req.query.id },
         {
           title: fileds.title,
           publishDate: fileds.publishDate,
-          cover: files.cover.path.split("public")[1],
+          cover: coverpath,
           content: fileds.content
         }
       );
