@@ -33,7 +33,7 @@
     <!-- 文章列表开始 -->
     <ul class="list w1100">
       {{each articles&&articles.records}}
-      <li class="fl">
+      <li class="{{}}fl">
         <a href="article.html" class="thumbnail">
           <img src="{{ articles.records && $value.cover }}" />
         </a>
