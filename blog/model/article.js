@@ -23,11 +23,29 @@ const articleSchmae = mongoose.Schema({
     default: null
   },
   content: {
-    type: String
+    type: String,
+    minlength: 3,
+    required: [true, "内容最少3个字"]
   }
 });
 //根据文章集合规则创建文章集合
 const Article = mongoose.model("Article", articleSchmae);
 
+//验证用户表单
+const Joi = require("joi");
+function verifyArticleInfo(article) {
+  const schema = {
+    title: Joi.string()
+      .min(4)
+      .max(20)
+      .required()
+      .error(new Error("文章标题4-20字")),
+    content: Joi.string()
+      .min(3)
+      .required()
+      .error(new Error("内容最少三个字"))
+  };
+  return Joi.validate(article, schema);
+}
 //将文章集合作为模块成员导出
-module.exports = { Article };
+module.exports = { Article, verifyArticleInfo };

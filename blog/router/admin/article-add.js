@@ -4,9 +4,9 @@
 const formidable = require("formidable");
 const path = require("path");
 //导入文章集合
-const { Article } = require("../../model/article");
+const { Article, verifyArticleInfo } = require("../../model/article");
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   //创建表单解析对象
   const form = formidable.IncomingForm();
   //配置上传文件保存路径
@@ -31,6 +31,15 @@ module.exports = async (req, res) => {
     //所以我们需要将以上path进行切割保存
     //files.cover.path.split("public")[1];
     //   \uploads\upload_8e027ac7c5e750df95ccd25706f09442.jpg
+    try {
+      const { title, content } = fileds;
+      await verifyArticleInfo({ title, content });
+    } catch (error) {
+      return next(
+        JSON.stringify({ path: "/admin/article-edit?msg=", msg: error.message })
+      );
+    }
+
     const article = await Article.create({
       title: fileds.title,
       author: fileds.author,
