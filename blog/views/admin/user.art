@@ -99,7 +99,6 @@
 <script type="text/javascript">
     $('.del').on('click',function(){  
         var idss= $(this).attr("data-id");
-        console.log(idss);
        $("#delUserId").val(idss);
     });
 </script>

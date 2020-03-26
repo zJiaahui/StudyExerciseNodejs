@@ -684,3 +684,9 @@
    <td>{{dateformat($value.publishDate,"yyyy-mm-dd")}}</td>
 
   ```
+
+- ## 21、用第三方模块实现分页功能 mongoose-sex-page
+
+- ## 22、MongoDB 检索所有记录，但是当我尝试通过 id 检索仅 1 条记录时，我得到了 CastError。
+  CastError: Cast to ObjectId failed for value ""5e7b9e45d4cff37070ad0ab9"" at path "\_id" for model "Article"
+  从 MongoDB 查询出来的 id 是 ObjectId 类型的,在模板中使用该 id 值时必须这样写{{@$value._id}}不能直接写{{$value._id}}第二种写法会保留双引号导致通过{{$value._id}}得到的 id 值再向数据库中查询时他是含有双引号的因此会出现不能转换问题

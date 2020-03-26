@@ -37,5 +37,8 @@ admin.get("/article-edit", require("./admin/article-edit"));
 //添加文章表单路由
 admin.post("/article-add", require("./admin/article-add"));
 
+//删除文章功能路由
+admin.post("/article-del", require("./admin/delarticle"));
+
 //将admin路由router作为模块成员进行导出
 module.exports = admin;
