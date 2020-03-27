@@ -426,7 +426,12 @@
     const session = require("express-session");
     //配置session
     app.use(
-      session({ resave: true, saveUninitialized: true, secret: "secret key" })
+      session({
+        resave: true,
+        saveUninitialized: true,
+        secret: "secret key",
+        coolie: { maxAge: 24 * 60 * 60 * 1000 }
+      }) //设置失效时间不然当关闭浏览器就会失效
     );
     ```
 
@@ -442,6 +447,10 @@
       //req能获取express框架的app对象然后通过app.locals.将数据报了出去让所有模板都可以访问userInfo了
       req.app.locals.userInfo = user;
     }
+    ```
+
+    ```
+    //在通过判断req.session.uaername是否存在而判断是不是登录了
     ```
 
 - ## 12、登录拦截
@@ -729,10 +738,10 @@
 
 - ## 21、用第三方模块实现分页功能 mongoose-sex-page
 
-- ## 22、MongoDB 检索所有记录，但是当我尝试通过 id 检索仅 1 条记录时，我得到了 CastError。
+* ## 22、MongoDB 检索所有记录，但是当我尝试通过 id 检索仅 1 条记录时，我得到了 CastError。
   CastError: Cast to ObjectId failed for value ""5e7b9e45d4cff37070ad0ab9"" at path "\_id" for model "Article"
   从 MongoDB 查询出来的 id 是 ObjectId 类型的,在模板中使用该 id 值时必须这样写{{@$value._id}}不能直接写{{$value._id}}第二种写法会保留双引号导致通过{{$value._id}}得到的 id 值再向数据库中查询时他是含有双引号的因此会出现不能转换问题
-- ## 23、mongoodb 添加账号密码
+* ## 23、mongoodb 添加账号密码
 
   - ### 23.1、mongoodb 默认免账号密码登录
   - ### 23.2、设置账号密码
@@ -761,16 +770,16 @@
   - #### (12)、接下来需要些入用户名和密码进行连接
     mongoose.connect('mongodb://itcast:itcast@localhost:/blog);
 
-- ## 23、开发环境和生产环境
+* ## 23、开发环境和生产环境
   //区分开发环境和生产环境（在不同的环境中项目配置是不一样的，为了避免项目放到生产环境是还有手动手改配置而产生麻烦，开发环境设置：在电脑上配置系统环境变量 NODE_ENV，变量值为 development；生产环境配置：在电脑上配置系统环境变量 NODE_ENV，变量值为 production）
   if (process.env.NODE_ENV == "development") {
   } else if (process.env.NODE_ENV == "production") {
   }
-- ## 24、将客户端发送到服务器的请求信息打印到控制台中 morgan 模块
+* ## 24、将客户端发送到服务器的请求信息打印到控制台中 morgan 模块
   npm install morgan //安装 morgan 模块
   const morgan = require("morgan");//导入模块
   app.use(morgan("dev")); //在开发环境中将客户端发送到服务器的请求信息打印到控制台中
-- ## 25、config 模块
+* ## 25、config 模块
   - 将不同环境中的配置信息抽离到单独的文件中，config 模块内部会自动判断当前的运行环境，并读取对应的配置信息
     - 1、下载安装模块 npm install config
     - 2、在项目根目录下新建 config 文件夹(必须以此命名)

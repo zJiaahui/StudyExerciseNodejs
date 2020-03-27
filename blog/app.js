@@ -30,7 +30,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //配置session
 app.use(
-  session({ resave: true, saveUninitialized: true, secret: "secret key" })
+  session({
+    resave: true,
+    saveUninitialized: true,
+    secret: "secret key",
+    coolie: { maxAge: 24 * 60 * 60 * 1000 }
+  }) //设置失效时间
 );
 
 //静态资源路由(原理就是接收所有请求将请求url直接在指定的根目录下进行匹配)
