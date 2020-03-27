@@ -738,6 +738,74 @@
 
 - ## 21、用第三方模块实现分页功能 mongoose-sex-page
 
+  ```nodejs
+      const { Article } = require("../../model/article");
+    //导入数据分页查询模块
+    const mongooseSexPage = require("mongoose-sex-page");
+    module.exports = async (req, res) => {
+      //标记当前显示的是文章管理页面还是用户管理页面
+      req.app.locals.currentLink = "article";
+      const page = req.query.page;
+      //查询数据
+      //page()设置当前页码
+      //size()设置当前页显示数据数量
+      //display()设置客户端要显示页码的数量
+      //exec()向数据库中发送查询请求
+      const articles = await mongooseSexPage(Article)
+        .find()
+        .page(page)
+        .size(5)
+        .display(5)
+        .populate("author")
+        .exec();
+
+      /* {
+          "page": 1,//查询时设置的当前页
+          "size": 2,//查询时设置的当前页数据条数
+          "total": 3,//数据库中所有数据条数
+          "records": [{ //按数据查询条件查询到的数据
+                        "cover": "\\uploads\\upload_97aad070df47cd4c134e262041cb1490.jpg",
+                        "_id": "5e7b9826e7476e5f90b06858",
+                        "title": "第一篇文章",
+                        "author": {
+                                    "state": 0,
+                                    "_id": "5e7b313a7c95798c8016a208",
+                                    "username": "最大管理员",
+                                    "email": "123@qq.com",
+                                    "password": "$2b$10$zRp7vzuIxqyd6W7plQORi.VWol0f9SUCyVLK9bejAlr1pNqNGZxym",
+                                    "role": "admin",
+                                    "__v": 0
+                                  },
+                        "publishDate": null,
+                        "content": "<p>写下我的第一篇博客</p>",
+                        "__v": 0
+                        },
+                        {
+                          "cover": "\\uploads\\upload_2fbcbce05b1eb8e3eff20729f8049eab.jpg",
+                          "_id": "5e7b9e07d4cff37070ad0ab8",
+                          "title": "第二篇文章",
+                          "author": {
+                                      "state": 0,
+                                      "_id": "5e7b313a7c95798c8016a208",
+                                      "username": "最大管理员",
+                                      "email": "123@qq.com",
+                                      "password": "$2b$10$zRp7vzuIxqyd6W7plQORi.VWol0f9SUCyVLK9bejAlr1pNqNGZxym",
+                                      "role": "admin",
+                                      "__v": 0
+                                    },
+                        "publishDate": null,
+                        "content": "<p>第二篇文章</p>",
+                        "__v": 0
+                        }]
+          "pages": 2,
+          "display": [1,2]
+          }
+          */
+      //res.send(articles);
+      res.render("admin/article.art", { articles: articles });
+    };
+  ```
+
 * ## 22、MongoDB 检索所有记录，但是当我尝试通过 id 检索仅 1 条记录时，我得到了 CastError。
   CastError: Cast to ObjectId failed for value ""5e7b9e45d4cff37070ad0ab9"" at path "\_id" for model "Article"
   从 MongoDB 查询出来的 id 是 ObjectId 类型的,在模板中使用该 id 值时必须这样写{{@$value._id}}不能直接写{{$value._id}}第二种写法会保留双引号导致通过{{$value._id}}得到的 id 值再向数据库中查询时他是含有双引号的因此会出现不能转换问题
