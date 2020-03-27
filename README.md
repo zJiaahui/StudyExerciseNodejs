@@ -689,28 +689,28 @@
 
 - ## 19、读取图片并预览
   ```node.js
-    //实现图片上传预览功能
-    //获取上传控件
-    var file = document.querySelector("#file");
-    //获取上传图片预览控件
-    var preview = document.querySelector("#preview");
-    //监听是否选择文件
-    file.onchange = function() {
-      //选择文件后创建文件读取对象
-      var reader = new FileReader();
-      //用户已选择文件列表（默认就是数组类型因为可以实现选择多个文件）
-      this.files[0];
-      //读取文件（该方法为异步方法）
-      reader.readAsDataURL(this.files[0]);
-      //监听读取完成
-      reader.onload = function() {
-        //打印读取得编码看看该值可以直接让img标签的src属性使用
-        console.log(reader.result);
-        //将上传的文件在img标签中显示
-        preview.src = reader.result;
-        preview.style.width = "200px";
-      };
+  //实现图片上传预览功能
+  //获取上传控件
+  var file = document.querySelector("#file");
+  //获取上传图片预览控件
+  var preview = document.querySelector("#preview");
+  //监听是否选择文件
+  file.onchange = function() {
+    //选择文件后创建文件读取对象
+    var reader = new FileReader();
+    //用户已选择文件列表（默认就是数组类型因为可以实现选择多个文件）
+    this.files[0];
+    //读取文件（该方法为异步方法）
+    reader.readAsDataURL(this.files[0]);
+    //监听读取完成
+    reader.onload = function() {
+      //打印读取得编码看看该值可以直接让img标签的src属性使用
+      console.log(reader.result);
+      //将上传的文件在img标签中显示
+      preview.src = reader.result;
+      preview.style.width = "200px";
     };
+  };
   ```
 - ## 20、日期格式处理
 
@@ -732,3 +732,50 @@
 - ## 22、MongoDB 检索所有记录，但是当我尝试通过 id 检索仅 1 条记录时，我得到了 CastError。
   CastError: Cast to ObjectId failed for value ""5e7b9e45d4cff37070ad0ab9"" at path "\_id" for model "Article"
   从 MongoDB 查询出来的 id 是 ObjectId 类型的,在模板中使用该 id 值时必须这样写{{@$value._id}}不能直接写{{$value._id}}第二种写法会保留双引号导致通过{{$value._id}}得到的 id 值再向数据库中查询时他是含有双引号的因此会出现不能转换问题
+- ## 23、mongoodb 添加账号密码
+
+  - ### 23.1、mongoodb 默认免账号密码登录
+  - ### 23.2、设置账号密码
+  - #### (1)、系统管理员方式运行 powershell
+  - #### (2)、输入 `mongo` 链接数据库
+  - #### (3)、查看已有的数据库输入`show dbs`
+  - #### (4)、mongodb 必须先创建超级管理员账户才能创建普通管理账户
+  - #### (5)、先切换到 admin 默认数据库中使用如下命令 `use admin`
+  - #### (6)、输入 `db.createUser({user:"root",pwd:"root",roles:["root"]})`创建超级管理员账户 roles 的值是固定写法
+  - #### (7)、在为其他数据库创建账户先输入 `use 数据库名` 在输入`db.createUser({user:"itcast",pwd:"itcast",roles:["readWrite"]})`roles 的值是固定写法
+  - #### (8)、输入`exit`退出数据库环境
+  - #### (9)、需要重新卸载安装 mongo 的服务
+    - 停止服务
+      `net stop mingodb`
+    - 移除服务
+      `mongod --remove`
+  - #### (10)、重新创建服务
+    ```
+      mongod --logpath="D:\ZSoftwareDevelop\MongoDB\Server\4.
+    2\log\mongod.log"
+    --dbpath="D:\ZSoftwareDevelop\MongoDB\Server\4.2\data"
+    --install --auth
+    ```
+    (--logpath 指定日志输出目录，--dbpath 指定数据库保存目录，--install 表示安装 --auth 表示需要验证账号登录)
+  - #### (11)、在启动服务 net start mongodb
+  - #### (12)、接下来需要些入用户名和密码进行连接
+    mongoose.connect('mongodb://itcast:itcast@localhost:/blog);
+
+- ## 23、开发环境和生产环境
+  //区分开发环境和生产环境（在不同的环境中项目配置是不一样的，为了避免项目放到生产环境是还有手动手改配置而产生麻烦，开发环境设置：在电脑上配置系统环境变量 NODE_ENV，变量值为 development；生产环境配置：在电脑上配置系统环境变量 NODE_ENV，变量值为 production）
+  if (process.env.NODE_ENV == "development") {
+  } else if (process.env.NODE_ENV == "production") {
+  }
+- ## 24、将客户端发送到服务器的请求信息打印到控制台中 morgan 模块
+  npm install morgan //安装 morgan 模块
+  const morgan = require("morgan");//导入模块
+  app.use(morgan("dev")); //在开发环境中将客户端发送到服务器的请求信息打印到控制台中
+- ## 25、config 模块
+  - 将不同环境中的配置信息抽离到单独的文件中，config 模块内部会自动判断当前的运行环境，并读取对应的配置信息
+    - 1、下载安装模块 npm install config
+    - 2、在项目根目录下新建 config 文件夹(必须以此命名)
+    - 3、在 config 文件夹下新建 default.json、development.json、production.json 文件
+    - 4、在项目中通过 require 方法将模块进行导入
+      const config=require("config")
+    - 5、使用模块内部提供的 get 方法获取配置信息
+      config.get()
