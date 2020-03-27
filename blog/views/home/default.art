@@ -20,10 +20,11 @@
         <!-- 网站导航开始 -->
         <ul class="navigation fr">
           <li>
-            <a class="active" href="index.html">首页</a>
+            <a class="active" href="/home">首页</a>
           </li>
           <li>
-            <a href="#">登录</a>
+		   
+            <a href={{ userInfo1!=null?"/home/logout":"/admin/login"}}> {{ userInfo1!=null?"退出登录"+userInfo1.username:"登录"}}</a>
           </li>
         </ul>
         <!-- 网站导航结束 -->
@@ -33,12 +34,12 @@
     <!-- 文章列表开始 -->
     <ul class="list w1100">
       {{each articles&&articles.records}}
-      <li class="{{}}fl">
-        <a href="article.html" class="thumbnail">
+      <li class="fl">
+        <a href="/home/article?id={{@$value._id}}" class="thumbnail">
           <img src="{{ articles.records && $value.cover }}" />
         </a>
         <div class="content">
-          <a class="article-title" href="article.html">{{
+          <a class="article-title" href="/home/article?id={{@$value._id}}">{{
             articles.records && $value.title
           }}</a>
           <div class="article-info">
@@ -50,7 +51,7 @@
             }}</span>
           </div>
           <div class="brief">
-            {{@ articles.records && $value.content }}
+            {{@articles.records && $value.content.replace(/<[^>]+>/g,"").substr(0,100)+"..." }}
           </div>
         </div>
       </li>

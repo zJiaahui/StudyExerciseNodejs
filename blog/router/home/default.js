@@ -2,6 +2,7 @@
 const { Article } = require("../../model/article");
 const mongoosepage = require("mongoose-sex-page");
 module.exports = async (req, res) => {
+  const id = req.query.id;
   const page = req.query.page;
   const articles = await mongoosepage(Article)
     .find()
@@ -10,5 +11,7 @@ module.exports = async (req, res) => {
     .display(5)
     .populate("author")
     .exec();
-  res.render("home/default", { articles: articles });
+  //console.log(articles);
+
+  res.render("home/default", { articles: articles, id: id });
 };

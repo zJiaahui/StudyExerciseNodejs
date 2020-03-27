@@ -8,6 +8,9 @@ const guard = (req, res, next) => {
     res.redirect("/admin/login");
   } else {
     //放行请求
+    if (req.session.role == "normal") {
+      res.redirect("/home");
+    }
     next();
   }
 };
