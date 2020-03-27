@@ -70,7 +70,7 @@
 						<div class="mb10">
 							<div class="article-info">
 								<span class="author">{{$value.uid.username}}</span>
-								<span>{{dateformat($value.time,"yyyy-mm-dd hh:mm:ss")}}</span>
+								<span>{{dateformat($value.time,"yyyy-mm-dd hh:MM:ss")}}</span>
 								<span>{{$value.uid.email}}</span>
 							</div>
 							<div class="comment-content">
